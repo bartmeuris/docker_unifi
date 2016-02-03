@@ -13,7 +13,8 @@ RUN apt-get -q update &&\
     apt-get -q clean && rm -rf /var/lib/apt/lists/* &&\
     useradd -d /var/lib/unifi unifi &&\
     mkdir -p /var/lib/unifi /var/log/unifi /var/run/unifi &&\
-    chown -R unifi:unifi /usr/lib/unifi /var/lib/unifi /var/log/unifi /var/run/unifi # Update 2016/02/03
+    chown -R unifi:unifi /usr/lib/unifi /var/lib/unifi /var/log/unifi /var/run/unifi &&\
+    ln -s /var/lib/unifi /usr/lib/unifi/data # Update 2016/02/03
 
 USER unifi
 WORKDIR /var/lib/unifi
