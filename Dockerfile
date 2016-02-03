@@ -9,10 +9,11 @@ RUN echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti"  > /et
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 RUN apt-get -q update &&\
-    apt-get install --no-install-recommends -qy --force-yes default-jre-headless unifi &&\
+    apt-get install --no-install-recommends -qy --force-yes default-jre-headless unifi=4.8.12-7387 &&\
     apt-get -q clean && rm -rf /var/lib/apt/lists/* &&\
     useradd -d /var/lib/unifi unifi &&\
-    chown -R unifi:unifi /usr/lib/unifi /var/lib/unifi /var/log/unifi /var/run/unifi # Update 2015/10/27
+    mkdir -p /var/lib/unifi /var/log/unifi /var/run/unifi &&\
+    chown -R unifi:unifi /usr/lib/unifi /var/lib/unifi /var/log/unifi /var/run/unifi # Update 2016/02/03
 
 USER unifi
 WORKDIR /var/lib/unifi
