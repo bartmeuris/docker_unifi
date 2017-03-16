@@ -10,7 +10,7 @@ RUN echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5  ubiquiti"  > /e
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 RUN apt-get -q update &&\
-    apt-get install --no-install-recommends -qy --force-yes default-jre-headless unifi=5.2.9-8748 &&\
+    apt-get install --no-install-recommends -qy --force-yes default-jre-headless unifi=5.4.11-9184 &&\
     apt-get -q clean && rm -rf /var/lib/apt/lists/* &&\
     useradd -d /var/lib/unifi unifi &&\
     mkdir -p /var/lib/unifi /var/log/unifi /var/run/unifi &&\
