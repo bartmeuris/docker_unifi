@@ -3,7 +3,7 @@ version: '2'
 services:
     unifi:
         build: .
-        image: bartmeuris/unifi
+        image: bartmeuris/unifi:latest
         restart: always
         ports:
         - "6789:6789/tcp"
