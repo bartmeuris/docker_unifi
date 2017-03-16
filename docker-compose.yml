@@ -14,5 +14,5 @@ services:
         - "3478:3478/udp"
         - "10001:10001/udp"
         volumes:
-        - /home/vagrant/unifidata:/var/lib/unifi
+        - ./data:/var/lib/unifi
 

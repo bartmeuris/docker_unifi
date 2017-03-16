@@ -10,19 +10,26 @@ RUN echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5  ubiquiti"  > /e
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
 RUN apt-get -q update &&\
-    apt-get install --no-install-recommends -qy --force-yes default-jre-headless unifi=5.4.11-9184 &&\
+    apt-get install --no-install-recommends -qy --force-yes execstack default-jre-headless unifi=5.4.11-9184 &&\
+    execstack -c /usr/lib/unifi/lib/native/Linux/amd64/libubnt_webrtc_jni.so &&\
     apt-get -q clean && rm -rf /var/lib/apt/lists/* &&\
     useradd -d /var/lib/unifi unifi &&\
     mkdir -p /var/lib/unifi /var/log/unifi /var/run/unifi &&\
     chown -R unifi:unifi /usr/lib/unifi /var/lib/unifi /var/log/unifi /var/run/unifi &&\
-    ln -s /var/lib/unifi /usr/lib/unifi/data # Update 2016/11/08
+    ln -s /var/lib/unifi /usr/lib/unifi/data &&\
+    cp -R /usr/lib/unifi/data /usr/lib/unifi/data_orig
 
-USER unifi
+#USER unifi
+ENV UNIFI_USER unifi
+
 WORKDIR /var/lib/unifi
 # https://community.ubnt.com/t5/UniFi-Frequently-Asked-Questions/UniFi-What-are-the-default-ports-used-by-UniFi/ta-p/412439
 EXPOSE 6789/tcp 8843/tcp 8880/tcp 8080/tcp 8443/tcp 3478/udp 10001/udp
 VOLUME ["/var/lib/unifi"]
 
-ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]
+ADD unifi.sh /unifi.sh
+RUN chmod a+x /unifi.sh
+#ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]
+ENTRYPOINT ["/unifi.sh"]
 CMD ["start"]
 
