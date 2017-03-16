@@ -4,7 +4,7 @@ services:
     unifi:
         build: .
         image: bartmeuris/unifi
-	restart: always
+        restart: always
         ports:
         - "6789:6789/tcp"
         - "8843:8843/tcp"
@@ -14,5 +14,5 @@ services:
         - "3478:3478/udp"
         - "10001:10001/udp"
         volumes:
-        - ./data:/var/lib/unifi
+        - /home/vagrant/unifidata:/var/lib/unifi
 
