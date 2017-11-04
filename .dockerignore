@@ -2,4 +2,4 @@ data
 LICENSE
 README.md
 docker-compose.yml
-
+check_version.sh
