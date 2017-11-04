@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Bart Meuris <bart.meuris@gmail.com>
 
 # Based on: https://github.com/jacobalberty/unifi-docker/tree/master/unifi4
@@ -9,18 +9,26 @@ RUN echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5  ubiquiti"  > /e
     apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 &&\
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
 
-RUN apt-get -q update &&\
-    apt-get install --no-install-recommends -qy --force-yes execstack default-jre-headless unifi=5.4.11-9184 &&\
-    execstack -c /usr/lib/unifi/lib/native/Linux/amd64/libubnt_webrtc_jni.so &&\
-    apt-get -q clean && rm -rf /var/lib/apt/lists/* &&\
-    useradd -d /var/lib/unifi unifi &&\
-    mkdir -p /var/lib/unifi /var/log/unifi /var/run/unifi &&\
-    chown -R unifi:unifi /usr/lib/unifi /var/lib/unifi /var/log/unifi /var/run/unifi &&\
-    ln -s /var/lib/unifi /usr/lib/unifi/data &&\
-    cp -R /usr/lib/unifi/data /usr/lib/unifi/data_orig
 
-#USER unifi
+# For the latest version, see:
+#  http://dl-origin.ubnt.com/unifi/debian/dists/unifi5/ubiquiti/binary-amd64/Packages
+ARG UNIFI_VERSION="5.5.24-9806"
+#ARG UNIFI_VERSION="5.5.24-9806"
+
 ENV UNIFI_USER unifi
+
+RUN    apt-get -q update \
+    && apt-get install --no-install-recommends -qy default-jre-headless unifi=${UNIFI_VERSION} \
+    && apt-get -q clean && rm -rf /var/lib/apt/lists/* /tmp/*
+
+RUN    useradd -d /var/lib/unifi ${UNIFI_USER} \
+    && mkdir -p /var/lib/unifi/data /var/lib/unifi/logs /var/lib/unifi/run \
+    && [ -f /usr/lib/unifi/data ] && cp -R /usr/lib/unifi/data /usr/lib/unifi/data_orig || true \
+    && ln -s /var/lib/unifi/data /usr/lib/unifi/data \
+    && ln -s /var/lib/unifi/logs /usr/lib/unifi/logs \
+    && ln -s /var/lib/unifi/run /usr/lib/unifi/run \
+    && chown -R ${UNIFI_USER}:${UNIFI_USER} /usr/lib/unifi /var/lib/unifi
+
 
 WORKDIR /var/lib/unifi
 # https://community.ubnt.com/t5/UniFi-Frequently-Asked-Questions/UniFi-What-are-the-default-ports-used-by-UniFi/ta-p/412439
