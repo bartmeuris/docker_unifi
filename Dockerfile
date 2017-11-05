@@ -4,7 +4,9 @@ MAINTAINER Bart Meuris <bart.meuris@gmail.com>
 # Based on: https://github.com/jacobalberty/unifi-docker/tree/master/unifi4
 
 # See https://help.ubnt.com/hc/en-us/articles/220066768-UniFi-How-to-Install-Update-via-APT-on-Debian-or-Ubuntu
-RUN echo "deb http://www.ubnt.com/downloads/unifi/debian unifi5  ubiquiti"  > /etc/apt/sources.list.d/20ubiquiti.list &&\
+ARG UNIFI_REPO="stable"
+
+RUN echo "deb deb http://www.ubnt.com/downloads/unifi/debian ${UNIFI_REPO} ubiquiti" /etc/apt/sources.list.d/20ubiquiti.list &&\
     echo "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen" > /etc/apt/sources.list.d/21mongodb.list &&\
     apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 &&\
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
