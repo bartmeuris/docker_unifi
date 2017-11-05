@@ -4,22 +4,19 @@ MAINTAINER Bart Meuris <bart.meuris@gmail.com>
 # Based on: https://github.com/jacobalberty/unifi-docker/tree/master/unifi4
 
 # See https://help.ubnt.com/hc/en-us/articles/220066768-UniFi-How-to-Install-Update-via-APT-on-Debian-or-Ubuntu
-ARG UNIFI_REPO="testing"
+ARG UNIFI_REPO="stable"
 
-RUN echo "deb deb http://www.ubnt.com/downloads/unifi/debian ${UNIFI_REPO} ubiquiti" /etc/apt/sources.list.d/20ubiquiti.list &&\
-    echo "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen" > /etc/apt/sources.list.d/21mongodb.list &&\
-    apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 &&\
-    apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
-
+RUN    echo "deb http://www.ubnt.com/downloads/unifi/debian ${UNIFI_REPO} ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv 06E85760C0A52C50
 
 # For the latest version, see:
 #  http://dl-origin.ubnt.com/unifi/debian/dists/unifi5/ubiquiti/binary-amd64/Packages
-ARG UNIFI_VERSION="5.6.19-10171"
+ARG UNIFI_VERSION="5.5.24-9806"
 #ARG UNIFI_VERSION="5.5.24-9806"
 
 ENV UNIFI_USER unifi
 
-RUN    apt-get -q update \
+RUN    apt-get update \
     && apt-get install --no-install-recommends -qy default-jre-headless unifi=${UNIFI_VERSION} \
     && apt-get -q clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
