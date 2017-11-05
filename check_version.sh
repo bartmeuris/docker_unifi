@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 #UNIFI_VERSION_URL="http://dl-origin.ubnt.com/unifi/debian/dists/unifi5/ubiquiti/binary-amd64/Packages"
 
