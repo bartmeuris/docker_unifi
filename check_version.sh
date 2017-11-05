@@ -31,12 +31,9 @@ if [ "${UNIFI_DOCKER_REPO}:${UNIFI_DOCKER_VERSION}" != "${UNIFI_REPO}:${UNIFI_VE
 	echo "Updating Dockerfile..."
 	OLDVER=$(date +%Y%m%d%H%M%S)
 	sed --in-place=.${OLDVER} "s/^ARG UNIFI_VERSION=\".*\"$/ARG UNIFI_VERSION=\"${UNIFI_VERSION}\"/;s/^ARG UNIFI_REPO=\".*\"$/ARG UNIFI_REPO=\"${UNIFI_REPO}\"/" Dockerfile
-	if ! git branch -a -q | grep -q "${GIT_BRANCH}"; then
-		echo "Git branch ${GIT_BRANCH} doesn't exist yet - creating and committing..."
-		git branch "${GIT_BRANCH}"
-		git checkout "${GIT_BRANCH}"
-		git commit Dockerfile -m "Added version ${UNIFI_VERSION} in ${UNIFI_REPO}"
-	fi
+	git branch --set-upstream "${GIT_BRANCH}"
+	git checkout "${GIT_BRANCH}"
+	git commit Dockerfile -m "Added version ${UNIFI_VERSION} from ${UNIFI_REPO} repo"
 else
 	echo "No new version (latest = ${UNIFI_DOCKER_VERSION} in ${UNIFI_DOCKER_REPO} repository)"
 fi
