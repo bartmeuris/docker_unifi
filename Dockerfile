@@ -1,18 +1,18 @@
 FROM ubuntu:16.04
 MAINTAINER Bart Meuris <bart.meuris@gmail.com>
 
-# Based on: https://github.com/jacobalberty/unifi-docker/tree/master/unifi4
-
-# See https://help.ubnt.com/hc/en-us/articles/220066768-UniFi-How-to-Install-Update-via-APT-on-Debian-or-Ubuntu
+# See:
+#   https://help.ubnt.com/hc/en-us/articles/220066768-UniFi-How-to-Install-Update-via-APT-on-Debian-or-Ubuntu
 ARG UNIFI_REPO="testing"
 
 RUN    echo "deb http://www.ubnt.com/downloads/unifi/debian ${UNIFI_REPO} ubiquiti" > /etc/apt/sources.list.d/20ubiquiti.list \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv 06E85760C0A52C50
 
 # For the latest version, see:
-#  http://dl-origin.ubnt.com/unifi/debian/dists/unifi5/ubiquiti/binary-amd64/Packages
+#   http://dl.ubnt.com/unifi/debian/dists/${UNIFI_REPO}/ubiquiti/binary-amd64/Packages 
+# The check_version.sh script automatically updates the version, creates a branch, and commits the dockerfile
+
 ARG UNIFI_VERSION="5.6.19-10171"
-#ARG UNIFI_VERSION="5.5.24-9806"
 
 ENV UNIFI_USER unifi
 
