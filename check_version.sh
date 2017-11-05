@@ -16,24 +16,21 @@ GIT_BRANCH="v${UNIFI_VERSION}"
 if [ "${UNIFI_REPO}" != "stable" ]; then
 	GIT_BRANCH="${GIT_BRANCH}-${UNIFI_REPO}"
 fi
-
+git checkout master
 if git branch -a -q | grep -q "${GIT_BRANCH}"; then
-	echo "Branch ${GIT_BRANCH} for version ${UNIFI_VERSION} in ${UNIFI_REPO} repository already exist - skipping"
-	exit 0
+	echo "Branch ${GIT_BRANCH} for version ${UNIFI_VERSION} in ${UNIFI_REPO} repository already exist"
+	if [ "${2}" != "force" ]; then
+		echo "Skipping"
+		exit 0
+	fi
+	echo "Doing a forced update..."
 fi
-# Get current values from the Dockerfile
-UNIFI_DOCKER_REPO=$(cat ${SDIR}/Dockerfile | grep "^ARG UNIFI_REPO=" | sed -e 's/^ARG UNIFI_REPO="\(.*\)"$/\1/')
-UNIFI_DOCKER_VERSION=$(cat ${SDIR}/Dockerfile | grep "^ARG UNIFI_VERSION=" | sed -e 's/^ARG UNIFI_VERSION="\(.*\)"$/\1/')
 
-if [ "${UNIFI_DOCKER_REPO}:${UNIFI_DOCKER_VERSION}" != "${UNIFI_REPO}:${UNIFI_VERSION}" ]; then
-	echo "New version: ${UNIFI_VERSION} (from ${UNIFI_REPO} repository)"
-	echo "Old version: ${UNIFI_DOCKER_VERSION} (from ${UNIFI_DOCKER_REPO} repository)"
-	echo "Updating Dockerfile..."
-	OLDVER=$(date +%Y%m%d%H%M%S)
-	sed --in-place=.${OLDVER} "s/^ARG UNIFI_VERSION=\".*\"$/ARG UNIFI_VERSION=\"${UNIFI_VERSION}\"/;s/^ARG UNIFI_REPO=\".*\"$/ARG UNIFI_REPO=\"${UNIFI_REPO}\"/" Dockerfile
-	git branch --set-upstream "${GIT_BRANCH}"
-	git checkout "${GIT_BRANCH}"
-	git commit Dockerfile -m "Added version ${UNIFI_VERSION} from ${UNIFI_REPO} repo"
-else
-	echo "No new version (latest = ${UNIFI_DOCKER_VERSION} in ${UNIFI_DOCKER_REPO} repository)"
+echo "Updating Dockerfile to version ${UNIFI_VERSION} from ${UNIFI_REPO} repo..."
+OLDVER=$(date +%Y%m%d%H%M%S)
+if ! git branch -a -q | grep -q "${GIT_BRANCH}"; then
+	git branch --track "${GIT_BRANCH}"
 fi
+sed --in-place=.${OLDVER} "s/^ARG UNIFI_VERSION=\".*\"$/ARG UNIFI_VERSION=\"${UNIFI_VERSION}\"/;s/^ARG UNIFI_REPO=\".*\"$/ARG UNIFI_REPO=\"${UNIFI_REPO}\"/" Dockerfile
+git checkout "${GIT_BRANCH}"
+git commit Dockerfile -m "Added version ${UNIFI_VERSION} from ${UNIFI_REPO} repo"
