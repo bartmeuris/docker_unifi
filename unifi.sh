@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$(ls /var/lib/unifi | wc -l)" -eq 0 ]; then
-	cp -R /usr/lib/unifi/data_orig /usr/lib/unifi/data
+	[ -d "/usr/lib/unifi/data_orig" ] && cp -R /usr/lib/unifi/data_orig /usr/lib/unifi/data
 fi
 
 mkdir -p /var/lib/unifi/logs
