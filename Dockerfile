@@ -20,7 +20,7 @@ RUN    apt-get update \
     && apt-get install --no-install-recommends -qy default-jre-headless unifi=${UNIFI_VERSION} \
     && apt-get -q clean && rm -rf /var/lib/apt/lists/* /tmp/*
 
-RUN    useradd -d /var/lib/unifi ${UNIFI_USER} \
+RUN    useradd -d /var/lib/unifi ${UNIFI_USER} || chsh -s /bin/bash unifi \
     && mkdir -p /var/lib/unifi/data /var/lib/unifi/logs /var/lib/unifi/run \
     && [ -f /usr/lib/unifi/data ] && cp -R /usr/lib/unifi/data /usr/lib/unifi/data_orig || true \
     && ln -s /var/lib/unifi/data /usr/lib/unifi/data \
