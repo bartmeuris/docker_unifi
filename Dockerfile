@@ -22,8 +22,8 @@ RUN    apt-get update \
 
 RUN    useradd -d /var/lib/unifi ${UNIFI_USER} || chsh -s /bin/bash unifi \
     && mkdir -p /var/lib/unifi/data /var/lib/unifi/logs /var/lib/unifi/run \
-    && [ -f /usr/lib/unifi/data ] && cp -R /usr/lib/unifi/data /usr/lib/unifi/data_orig || true \
-    && ln -s /var/lib/unifi/data /usr/lib/unifi/data \
+    && [ -f /usr/lib/unifi/data ] && mv /usr/lib/unifi/data /usr/lib/unifi/data_orig || true \
+    && ln -s /var/lib/unifi /usr/lib/unifi/data \
     && ln -s /var/lib/unifi/logs /usr/lib/unifi/logs \
     && ln -s /var/lib/unifi/run /usr/lib/unifi/run \
     && chown -R ${UNIFI_USER}:${UNIFI_USER} /usr/lib/unifi /var/lib/unifi
