@@ -12,6 +12,11 @@ UNIFI_VERSION_URL="http://dl.ubnt.com/unifi/debian/dists/${UNIFI_REPO}/ubiquiti/
 UNIFI_VERSION=$(wget -q  -O - ${UNIFI_VERSION_URL}  | grep "^Version: " | sed -e 's/.*: \(.*\)$/\1/')
 SDIR=$(dirname $0)
 
+[ -z "$UNIFI_VERSION" ] && {
+	echo "Error: could not fetch version for unifi software in ${UNIFI_REPO} repository"
+	exit 1
+}
+
 GIT_BRANCH="v${UNIFI_VERSION}"
 if [ "${UNIFI_REPO}" != "stable" ]; then
 	GIT_BRANCH="${GIT_BRANCH}-${UNIFI_REPO}"
